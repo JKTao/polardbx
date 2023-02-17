@@ -188,21 +188,23 @@ git submodule update --init
 
 ![image](https://user-images.githubusercontent.com/2645985/173986190-f647d8d7-4188-4f29-854c-a906f0686ca2.png)
 
-7. 使用CentOS中的`PolarDB-X/build/run/galaxysql/conf/server.properties`内容覆盖IDEA中CN的`galaxysql\polardbx-server\src\main\resources`，并将`metaDbAddr`中的`127.0.0.1`修改为WSL的IP：
+7. 使用CentOS中的`PolarDB-X/build/run/galaxysql/conf/server.properties`内容覆盖IDEA中CN的`galaxysql\polardbx-server\src\main\resources`，然后进行如下修改中的a-f, 或者在Windows cmd中执行`netsh interface portproxy add v4tov4 listenport=3000 listenaddress=0.0.0.0 connectport=3000 connectaddress=172.30.16.3
+
+a. 将`metaDbAddr`中的`127.0.0.1`修改为WSL的IP：
 
 ![image](https://user-images.githubusercontent.com/2645985/173987557-9b2f72aa-25a9-4149-b1c9-8a05cd26c19d.png)
 
 同时，修改代码中 polardbx-server/src/main/resources/server.properties 文件:
 
-a. 将`metaDbAddr` 改为 `127.0.0.1:4886`
+b. 将`metaDbAddr` 改为 `127.0.0.1:4886`
 
-b. 将`metaDbXprotoPort` 改为 `34886`
+c. 将`metaDbXprotoPort` 改为 `34886`
 
-c. 将`galaxyXProtocol` 改为 `2`
+d. 将`galaxyXProtocol` 改为 `2`
 
-d. 在shell中执行这行命令以获取`metaDbPasswd`：`mysql -h127.1 -P4886 -uroot -padmin -D polardbx_meta_db_polardbx -e "select passwd_enc from storage_info where inst_kind=2"`
+e. 在shell中执行这行命令以获取`metaDbPasswd`：`mysql -h127.1 -P4886 -uroot -padmin -D polardbx_meta_db_polardbx -e "select passwd_enc from storage_info where inst_kind=2"`
 
-e. 增加`metaDbPasswd=<查询到的密码>` 。
+f. 增加`metaDbPasswd=<查询到的密码>` 。
 
 8. 运行一次`com.alibaba.polardbx.server.TddlLauncher`，此时会启动失败
 
@@ -221,6 +223,7 @@ e. 增加`metaDbPasswd=<查询到的密码>` 。
 ```
 mysql -h 127.0.0.1 -upolardbx_root -p123456 -P8527
 ```
+
 
 ## 固定WSL的IP地址
 
